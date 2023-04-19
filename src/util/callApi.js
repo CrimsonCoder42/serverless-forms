@@ -1,34 +1,33 @@
-import fetch from 'node-fetch'
+// Import fetch from node-fetch
+import fetch from "node-fetch";
 
-async function callAPI(method, uri, params, body){
-    const jsonMimeType = {
-      'Content-type':'application/json'
-    }
-    try{
-      /*  Set up our fetch.
-       *   'body' to be included only when method is POST
-       *   If 'PUT', we need to be sure the mimetype is set to json
-       *      (so bodyparser.json() will deal with it) and the body
-       *      will need to be stringified.
-       *   '...' syntax is the ES6 spread operator.
-       *      It assigns new properties to an object, and in this case
-       *      lets us use a conditional to create, or not create, a property
-       *      on the object. (an empty 'body' property will cause an error
-       *      on a GET request!)
-       */
-      var response = await fetch(uri, {
-        method: method, // GET, POST, PUT, DELETE, etc.
-        ...(method=='POST' ? {body: body} : {}),
-        ...(method=='PUT' ?  {headers: jsonMimeType, body:JSON.stringify(body)} : {})
-      });
-      // response.json() parses the textual JSON data to a JSON object. 
-      // Returns a Promise that resolves with the value of the JSON object 
-      //  which you can pick up as the argument passed to the .then()
-      return await response.json(); 
-    }catch(err){
-      console.error(err);
-      return "{'status':'error'}";
-    }
+// Define the callAPI function
+async function callAPI(method, uri, params, body) {
+  // Define the JSON MIME type
+  const jsonMimeType = {
+    "Content-type": "application/json",
+  };
+
+  try {
+    // Set up the fetch request
+    const response = await fetch(uri, {
+      method: method, // GET, POST, PUT, DELETE, etc.
+      // Include 'body' only when method is POST
+      ...(method == "POST" ? { body: body } : {}),
+      // If 'PUT', set the mimetype to json and stringify the body
+      ...(method == "PUT"
+        ? { headers: jsonMimeType, body: JSON.stringify(body) }
+        : {}),
+    });
+
+    // Parse the response JSON data to a JSON object and return it
+    return await response.json();
+  } catch (err) {
+    // Log any errors and return an error status
+    console.error(err);
+    return "{'status':'error'}";
   }
-  //module.exports = callAPI;
-  export default callAPI;
+}
+
+// Export the callAPI function as default
+export default callAPI;
